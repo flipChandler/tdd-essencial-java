@@ -1,6 +1,6 @@
 package br.com.pedidoapp;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,9 @@ public class PedidoTest {
 	}
 	
 	private void assertResumoPedido(double valorTotal, double desconto) {
-		assertEquals(valorTotal, pedido.valorTotal(), 0.0001);
-		assertEquals(desconto, pedido.desconto(), 0.0001);
+		ResumoPedido resumoPedido = pedido.resumo();
+		assertEquals(valorTotal, resumoPedido.getValorTotal(), 0.0001);
+		assertEquals(desconto, resumoPedido.getDesconto(), 0.0001);
 	}
 	
 	@Test
@@ -43,4 +44,10 @@ public class PedidoTest {
 		assertResumoPedido(36.0, 0.0);
 	}	
 	
+	@Test
+	void aplicarDescontoNaPrimeiraFaixa() throws Exception {
+		pedido.adicionarItem(new ItemPedido("Shampoo", 20.0, 20));
+		
+		assertResumoPedido(400.0, 16.0);
+	}
 }
