@@ -11,14 +11,14 @@ public class CamelCaseConverterTest {
 	public static void setup() {
 		camelCase = new CamelCaseConverter();
 	}
-	
-	
+		
 	@Test
 	public void deveConverterNomeSimples() throws Exception {
 		assertEquals("Lionel", camelCase.converter("lionel"));
 	}
 	
+	@Test
 	public void deveConverterNomeSimplesMisturadoMaiusculoEMinusculo() throws Exception {
-		assertEquals("Lione", camelCase.converter("liONeL"));
-	}
+		assertEquals("Lionel Messi", camelCase.converter("liONeL mEssi"));
+	}	
 }
