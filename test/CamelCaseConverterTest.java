@@ -1,17 +1,24 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class CamelCaseConverterTest {
 	
-	@Test
-	void deveCriarObjetoCamelCaseConverter() throws Exception {
-		CamelCaseConverter camelCase = new CamelCaseConverter();
+	private static CamelCaseConverter camelCase;
+	
+	@BeforeAll
+	public static void setup() {
+		camelCase = new CamelCaseConverter();
 	}
+	
 	
 	@Test
 	public void deveConverterNomeSimples() throws Exception {
-		CamelCaseConverter camelCase = new CamelCaseConverter();
 		assertEquals("Lionel", camelCase.converter("lionel"));
+	}
+	
+	public void deveConverterNomeSimplesMisturadoMaiusculoEMinusculo() throws Exception {
+		assertEquals("Lione", camelCase.converter("liONeL"));
 	}
 }
