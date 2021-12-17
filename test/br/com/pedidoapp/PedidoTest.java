@@ -14,19 +14,27 @@ public class PedidoTest {
 		 pedido = new Pedido();
 	}
 	
+	private void assertResumoPedido(double valorTotal, double desconto) {
+		assertEquals(valorTotal, pedido.valorTotal(), 0.0001);
+		assertEquals(desconto, pedido.desconto(), 0.0001);
+	}
+	
 	@Test
 	void permitirAdicionarUmItemNoPedido() throws Exception {
 		pedido.adicionarItem("Sabonete", 3.0, 10);
 	}
-	
-	@Test
-	void calcularValorTotalParaPedidoVazio() throws Exception {
-		assertEquals(0.0, pedido.valorTotal(), 0.0001);       // delta que garante a margem de erro de 0.0001 
-	}
-	
+	 	
 	@Test
 	void calcularValorTotalEDescontoParaPedidoVazio() throws Exception {
-		assertEquals(0.0, pedido.valorTotal(), 0.0001);
-		assertEquals(0.0, pedido.desconto(), 0.0001);
+		assertResumoPedido(0.0, 0.0); // tem o valorTotal e o desconto
 	}
+	
+	@Test
+	void calcularResumoParaUmItemSemDesconto() throws Exception {
+		pedido.adicionarItem("Sabonete", 5.0, 5);
+		assertResumoPedido(25.0, 0.0);
+	}
+
+	
+	
 }
