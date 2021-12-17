@@ -1,18 +1,19 @@
 package br.com.pedidoapp;
 
 public class Pedido {
+	
+	private double valorTotal;
+	private double desconto;
 
-	public void adicionarItem(String descricao, double valorUnitario, int quantidade) {
-		
+	public void adicionarItem(ItemPedido itemPedido) {
+		this.valorTotal = itemPedido.getValorUnitario() * itemPedido.getQuantidade();
 	}
 
 	public double valorTotal() {
-		return 25.0;
+		return this.valorTotal;
 	}
 
 	public double desconto() {
-		return 0;
-	}
-	
-	
+		return this.desconto;
+	}	
 }

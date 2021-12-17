@@ -1,16 +1,16 @@
 package br.com.pedidoapp;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class PedidoTest {
 	
-	private static Pedido pedido;
+	private Pedido pedido;
 	
-	@BeforeAll
-	public static void setup() {
+	@BeforeEach
+	public void setup() {
 		 pedido = new Pedido();
 	}
 	
@@ -21,7 +21,7 @@ public class PedidoTest {
 	
 	@Test
 	void permitirAdicionarUmItemNoPedido() throws Exception {
-		pedido.adicionarItem("Sabonete", 3.0, 10);
+		pedido.adicionarItem(new ItemPedido("Sabonete", 3.0, 10));
 	}
 	 	
 	@Test
@@ -31,7 +31,7 @@ public class PedidoTest {
 	
 	@Test
 	void calcularResumoParaUmItemSemDesconto() throws Exception {
-		pedido.adicionarItem("Sabonete", 5.0, 5);
+		pedido.adicionarItem(new ItemPedido("Sabonete", 5.0, 5));
 		assertResumoPedido(25.0, 0.0);
 	}
 
