@@ -1,17 +1,31 @@
 package br.com.pedidoapp;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import br.com.pedidoapp.desconto.CalculadoraFaixaDesconto;
+import br.com.pedidoapp.desconto.DescontoPrimeiraFaixa;
+import br.com.pedidoapp.desconto.DescontoSegundaFaixa;
+import br.com.pedidoapp.desconto.DescontoTerceiraFaixa;
+import br.com.pedidoapp.desconto.SemDesconto;
 
 public class PedidoTest {
 	
 	private Pedido pedido;
 	
+	
 	@BeforeEach
 	public void setup() {
-		 pedido = new Pedido();
+		// DESIGN PATTERN: CHAIN OF RESPONSIBILITY 
+		CalculadoraFaixaDesconto calculadoraFaixaDesconto = 
+				new DescontoTerceiraFaixa(
+					new DescontoSegundaFaixa(
+						new DescontoPrimeiraFaixa(
+							new SemDesconto(null))));
+		
+		pedido = new Pedido(calculadoraFaixaDesconto);
 	}
 	
 	private void assertResumoPedido(double valorTotal, double desconto) {
