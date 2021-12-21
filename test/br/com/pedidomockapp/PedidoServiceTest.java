@@ -1,6 +1,9 @@
 package br.com.pedidomockapp;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import br.com.pedidomockapp.builder.PedidoBuilder;
+import br.com.pedidomockapp.model.AcaoLancamentoPedido;
 import br.com.pedidomockapp.model.Pedido;
 import br.com.pedidomockapp.notificacao.NotificadorEmail;
 import br.com.pedidomockapp.notificacao.NotificadorSms;
@@ -27,15 +31,14 @@ public class PedidoServiceTest {
 	private NotificadorEmail email;
 	
 	@Mock
-	private NotificadorSms sms;
-	
-	
+	private NotificadorSms sms;	
 	
 	@SuppressWarnings("deprecation")
 	@BeforeEach
 	private void setup() {
 		MockitoAnnotations.initMocks(this);
-		pedidoService = new PedidoService(pedidoRepository, email, sms);
+		List<AcaoLancamentoPedido> acoes = Arrays.asList(email, sms);
+		pedidoService = new PedidoService(pedidoRepository, acoes);
 		pedido = new PedidoBuilder()
 				.comValor(100.0)
 				.para("João", "joao@gmail.com", "99999-0000")
@@ -50,10 +53,6 @@ public class PedidoServiceTest {
 	
 	@Test
 	void salvarPedidoNoBancoDeDados() throws Exception {
-		Pedido pedido = new PedidoBuilder()
-				.comValor(100.0)
-				.para("João", "joao@gmail.com", "99999-0000")
-				.build();
 		pedidoService.lancar(pedido);
 		Mockito.verify(pedidoRepository).guardar(pedido);  // testa se o metodo guardar foi chamado
 	}
@@ -61,12 +60,12 @@ public class PedidoServiceTest {
 	@Test
 	void notificarPorEmail() throws Exception {
 		pedidoService.lancar(pedido);
-		Mockito.verify(email).enviar(pedido);
+		Mockito.verify(email).executar(pedido);
 	}
 	
 	@Test
 	void notificarPorSms() throws Exception {
 		pedidoService.lancar(pedido);
-		Mockito.verify(sms).enviar(pedido);
+		Mockito.verify(sms).executar(pedido);
 	}
 }

@@ -1,30 +1,30 @@
 package br.com.pedidomockapp.service;
 
+import java.util.List;
+
+import br.com.pedidomockapp.model.AcaoLancamentoPedido;
 import br.com.pedidomockapp.model.Pedido;
-import br.com.pedidomockapp.notificacao.NotificadorEmail;
-import br.com.pedidomockapp.notificacao.NotificadorSms;
 import br.com.pedidomockapp.repository.PedidoRepository;
 
 public class PedidoService {
 	
 	private PedidoRepository pedidoRepository;
-	private NotificadorEmail notificadorEmail;
-	private NotificadorSms notificadorSms;
+	private List<AcaoLancamentoPedido> acoes;
 	
 	
 	public PedidoService(PedidoRepository pedidoRepository, 
-						 NotificadorEmail notificadorEmail,
-						 NotificadorSms notificadorSms) {
+						List<AcaoLancamentoPedido> acoes) {
 		this.pedidoRepository = pedidoRepository;
-		this.notificadorEmail = notificadorEmail;
-		this.notificadorSms = notificadorSms;
+		this.acoes = acoes;
 	}
 
 	public double lancar(Pedido pedido) {
 		double imposto = pedido.getValor() * 0.1;
+		
 		this.pedidoRepository.guardar(pedido);
-		this.notificadorEmail.enviar(pedido);
-		this.notificadorSms.enviar(pedido);
+		
+		this.acoes.forEach(a -> a.executar(pedido));
+		
 		return imposto;
 	}
 
