@@ -1,6 +1,6 @@
 package br.com.flyapp;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +38,15 @@ public class PrecoPassagemServiceTest {
 		double valor = precoPassagemService.calcular(passageiro, voo);
 		
 		assertEquals(90.0, valor, 0.0001);
+	}
+	
+	@Test
+	void calcularValorPassagemParaPassageiroGoldComValorAcimaDoLimite() throws Exception {
+		Passageiro passageiro = new Passageiro("João", TipoPassageiro.GOLD);
+		Voo voo = new Voo("São Paulo", "Rio de Janeiro", 600.0);
+		double valor = precoPassagemService.calcular(passageiro, voo);
+		
+		assertEquals(510.0, valor, 0.0001);
 	}
 	
 }
