@@ -13,30 +13,25 @@ import br.com.pedidoapp.desconto.SemDesconto;
 
 public class PedidoTest {
 	
-	private Pedido pedido;
+	private PedidoBuilder pedidoBuilder;
 	
 	
 	@BeforeEach
 	public void setup() {
-		// DESIGN PATTERN: CHAIN OF RESPONSIBILITY 
-		CalculadoraFaixaDesconto calculadoraFaixaDesconto = 
-				new DescontoTerceiraFaixa(
-					new DescontoSegundaFaixa(
-						new DescontoPrimeiraFaixa(
-							new SemDesconto(null))));
-		
-		pedido = new Pedido(calculadoraFaixaDesconto);
+		pedidoBuilder = new PedidoBuilder();
 	}
 	
 	private void assertResumoPedido(double valorTotal, double desconto) {
-		ResumoPedido resumoPedido = pedido.resumo();
+		ResumoPedido resumoPedido = pedidoBuilder.build()
+												 .resumo();
 		assertEquals(valorTotal, resumoPedido.getValorTotal(), 0.0001);
 		assertEquals(desconto, resumoPedido.getDesconto(), 0.0001);
 	}
 	
 	@Test
 	void permitirAdicionarUmItemNoPedido() throws Exception {
-		pedido.adicionarItem(new ItemPedido("Sabonete", 3.0, 10));
+		// pedidoBuilder.build().adicionarItem(new ItemPedido("Sabonete", 3.0, 10)); adicionarItem de Pedido
+		pedidoBuilder.adicionarItem(3.0, 10);  // adicionarItem de PedidoBuilder
 	}
 	 	
 	@Test
@@ -46,38 +41,51 @@ public class PedidoTest {
 	
 	@Test
 	void calcularResumoParaUmItemSemDesconto() throws Exception {
-		pedido.adicionarItem(new ItemPedido("Sabonete", 5.0, 5));
+		pedidoBuilder.build()
+					 .adicionarItem(new ItemPedido("Sabonete", 5.0, 5));
 		assertResumoPedido(25.0, 0.0);
 	}
 	
 	@Test
 	void calcularResumoParaDoisItensSemDesconto() throws Exception {
-		pedido.adicionarItem(new ItemPedido("Sabonete", 3.0, 5));
-		pedido.adicionarItem(new ItemPedido("Creme Dental", 7.0, 3));
+		/*
+		 * pedidoBuilder.build().adicionarItem(new ItemPedido("Sabonete", 3.0, 5));
+		 * pedidoBuilder.build().adicionarItem(new ItemPedido("Creme Dental", 7.0, 3));
+		 */
+		pedidoBuilder.adicionarItem(3.0, 5)
+					 .adicionarItem(7.0, 3);
 		
 		assertResumoPedido(36.0, 0.0);
 	}	
 	
 	@Test
 	void aplicarDescontoNaPrimeiraFaixa() throws Exception {
-		pedido.adicionarItem(new ItemPedido("Shampoo", 20.0, 20));
+		pedidoBuilder.build()
+					 .adicionarItem(new ItemPedido("Shampoo", 20.0, 20));
 		
 		assertResumoPedido(400.0, 16.0);
 	}
 	
 	@Test
 	void aplicarDescontoNaSegundaFaixa() throws Exception {
-		pedido.adicionarItem(new ItemPedido("Shampoo", 15.0, 30));
-		pedido.adicionarItem(new ItemPedido("Creme de Cabelo", 15.0, 30));
+		pedidoBuilder.adicionarItem(15.0, 30)
+					 .adicionarItem(15.0, 30)
+					 .novoMetodo();
 		
 		assertResumoPedido(900.0, 54.0);
 	}
 	
 	@Test
 	void aplicarDescontoNaTerceiraFaixa() throws Exception {
-		pedido.adicionarItem(new ItemPedido("Shampoo", 15.0, 30));
-		pedido.adicionarItem(new ItemPedido("Creme de Cabelo", 15.0, 30));
-		pedido.adicionarItem(new ItemPedido("Gel", 10.0, 30));
+		/*
+		 * pedidoBuilder.build().adicionarItem(new ItemPedido("Shampoo", 15.0, 30));
+		 * pedidoBuilder.build().adicionarItem(new ItemPedido("Creme de Cabelo", 15.0,
+		 * 30)); pedidoBuilder.build().adicionarItem(new ItemPedido("Gel", 10.0, 30));
+		 */
+		pedidoBuilder.adicionarItem(15.0, 30)
+					 .adicionarItem(15.0, 30)
+					 .adicionarItem(10.0, 30)
+					 .novoMetodo();
 		
 		assertResumoPedido(1200.0, 96.0);
 	}
