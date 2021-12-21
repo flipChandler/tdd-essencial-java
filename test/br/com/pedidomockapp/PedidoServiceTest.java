@@ -10,6 +10,8 @@ import org.mockito.MockitoAnnotations;
 
 import br.com.pedidomockapp.builder.PedidoBuilder;
 import br.com.pedidomockapp.model.Pedido;
+import br.com.pedidomockapp.notificacao.NotificadorEmail;
+import br.com.pedidomockapp.notificacao.NotificadorSms;
 import br.com.pedidomockapp.repository.PedidoRepository;
 import br.com.pedidomockapp.service.PedidoService;
 
@@ -24,8 +26,10 @@ public class PedidoServiceTest {
 	@BeforeEach
 	private void setup() {
 		MockitoAnnotations.initMocks(this);
+		NotificadorEmail email = new NotificadorEmail();
+		NotificadorSms sms = new NotificadorSms();
 
-		pedidoService = new PedidoService(pedidoRepository);
+		pedidoService = new PedidoService(pedidoRepository, email, sms);
 	}
 	
 	@Test
