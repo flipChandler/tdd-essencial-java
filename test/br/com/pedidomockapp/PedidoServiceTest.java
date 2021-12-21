@@ -37,8 +37,8 @@ public class PedidoServiceTest {
 	@BeforeEach
 	private void setup() {
 		MockitoAnnotations.initMocks(this);
-		List<AcaoLancamentoPedido> acoes = Arrays.asList(email, sms);
-		pedidoService = new PedidoService(pedidoRepository, acoes);
+		List<AcaoLancamentoPedido> acoes = Arrays.asList(pedidoRepository, email, sms);
+		pedidoService = new PedidoService(acoes);
 		pedido = new PedidoBuilder()
 				.comValor(100.0)
 				.para("João", "joao@gmail.com", "99999-0000")
@@ -54,7 +54,7 @@ public class PedidoServiceTest {
 	@Test
 	void salvarPedidoNoBancoDeDados() throws Exception {
 		pedidoService.lancar(pedido);
-		Mockito.verify(pedidoRepository).guardar(pedido);  // testa se o metodo guardar foi chamado
+		Mockito.verify(pedidoRepository).executar(pedido);  // testa se o metodo guardar foi chamado
 	}
 	
 	@Test
