@@ -24,6 +24,11 @@ public class PrecoPassagemServiceTest {
 		// PrecoPassagemService precoPassagemService = new PrecoPassagemService();
 	}
 	
+	private void assertValorPassagem(Passageiro passageiro, Voo voo, double esperado) {
+		double valor = precoPassagemService.calcular(passageiro, voo);
+		assertEquals(esperado, valor, 0.0001);
+	}
+	
 	@Test
 	void permitirChamarCalculoDoValor() throws Exception {
 		Passageiro passageiro = new Passageiro("João", TipoPassageiro.GOLD);
@@ -32,21 +37,28 @@ public class PrecoPassagemServiceTest {
 	}
 	
 	@Test
-	void calcularPrecoParaPassageiroGoldComValorAbaixoDoLimite() throws Exception {
+	void calcularPrecoParaPassageiroGold_ComValorAbaixoDoLimite() throws Exception {
 		Passageiro passageiro = new Passageiro("João", TipoPassageiro.GOLD);
 		Voo voo = new Voo("São Paulo", "Rio de Janeiro", 100.0);
-		double valor = precoPassagemService.calcular(passageiro, voo);
 		
-		assertEquals(90.0, valor, 0.0001);
+		assertValorPassagem(passageiro, voo, 90.0);
 	}
 	
 	@Test
-	void calcularValorPassagemParaPassageiroGoldComValorAcimaDoLimite() throws Exception {
+	void calcularValorPassagemParaPassageiroGold_ComValorAcimaDoLimite() throws Exception {
 		Passageiro passageiro = new Passageiro("João", TipoPassageiro.GOLD);
 		Voo voo = new Voo("São Paulo", "Rio de Janeiro", 600.0);
-		double valor = precoPassagemService.calcular(passageiro, voo);
 		
-		assertEquals(510.0, valor, 0.0001);
+		assertValorPassagem(passageiro, voo, 510.0);
 	}
+	
+	@Test
+	void calcularValorPassagemParaPassageiroSilver_ComValorAbaixoDoLimite() throws Exception {
+		Passageiro passageiro = new Passageiro("João", TipoPassageiro.SILVER);
+		Voo voo = new Voo("São Paulo", "Rio de Janeiro", 100.0);
+		
+		assertValorPassagem(passageiro, voo, 94.0);
+	}
+	
 	
 }
