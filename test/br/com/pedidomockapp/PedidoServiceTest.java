@@ -1,6 +1,6 @@
 package br.com.pedidomockapp;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,27 +18,32 @@ import br.com.pedidomockapp.service.PedidoService;
 public class PedidoServiceTest {
 	
 	private PedidoService pedidoService;
+	private Pedido pedido;
 	
 	@Mock
 	private PedidoRepository pedidoRepository; 
+	
+	@Mock
+	private NotificadorEmail email;
+	
+	@Mock
+	private NotificadorSms sms;
+	
+	
 	
 	@SuppressWarnings("deprecation")
 	@BeforeEach
 	private void setup() {
 		MockitoAnnotations.initMocks(this);
-		NotificadorEmail email = new NotificadorEmail();
-		NotificadorSms sms = new NotificadorSms();
-
 		pedidoService = new PedidoService(pedidoRepository, email, sms);
+		pedido = new PedidoBuilder()
+				.comValor(100.0)
+				.para("João", "joao@gmail.com", "99999-0000")
+				.build();
 	}
 	
 	@Test
-	void calcularImposto() throws Exception {
-		Pedido pedido = new PedidoBuilder()
-							.comValor(100.0)
-							.para("João", "joao@gmail.com", "99999-0000")
-							.build();
-		
+	void calcularImposto() throws Exception {		
 		double imposto = pedidoService.lancar(pedido);		
 		assertEquals(10.0, imposto, 0.0001);
 	}
@@ -52,5 +57,16 @@ public class PedidoServiceTest {
 		pedidoService.lancar(pedido);
 		Mockito.verify(pedidoRepository).guardar(pedido);  // testa se o metodo guardar foi chamado
 	}
-
+	
+	@Test
+	void notificarPorEmail() throws Exception {
+		pedidoService.lancar(pedido);
+		Mockito.verify(email).enviar(pedido);
+	}
+	
+	@Test
+	void notificarPorSms() throws Exception {
+		pedidoService.lancar(pedido);
+		Mockito.verify(sms).enviar(pedido);
+	}
 }
