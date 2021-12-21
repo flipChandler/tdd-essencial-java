@@ -60,5 +60,13 @@ public class PrecoPassagemServiceTest {
 		assertValorPassagem(passageiro, voo, 94.0);
 	}
 	
+	@Test
+	void calcularValorPassagemParaPassageiroSilver_ComValorAcimaDoLimite() throws Exception {
+		Passageiro passageiro = new Passageiro("João", TipoPassageiro.SILVER);
+		Voo voo = new Voo("São Paulo", "Rio de Janeiro", 800.0);
+		
+		assertValorPassagem(passageiro, voo, 720.0);
+	}
+	
 	
 }
