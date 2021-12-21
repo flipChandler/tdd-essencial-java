@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import br.com.pedidomockapp.builder.PedidoBuilder;
 import br.com.pedidomockapp.model.Pedido;
@@ -15,9 +17,13 @@ public class PedidoServiceTest {
 	
 	private PedidoService pedidoService;
 	
+	@Mock
+	private PedidoRepository pedidoRepository; 
+	
+	@SuppressWarnings("deprecation")
 	@BeforeEach
 	private void setup() {
-		PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
+		MockitoAnnotations.initMocks(this);
 
 		pedidoService = new PedidoService(pedidoRepository);
 	}
@@ -39,7 +45,8 @@ public class PedidoServiceTest {
 				.comValor(100.0)
 				.para("João", "joao@gmail.com", "99999-0000")
 				.build();
-		pedidoService.lancar(pedido);	
+		pedidoService.lancar(pedido);
+		Mockito.verify(pedidoRepository).guardar(pedido);  // testa se o metodo guardar foi chamado
 	}
 
 }

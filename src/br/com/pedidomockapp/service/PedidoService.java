@@ -13,8 +13,6 @@ public class PedidoService {
 		this.pedidoRepository = pedidoRepository;
 	}
 
-
-
 	public double lancar(Pedido pedido) {
 		double imposto = pedido.getValor() * 0.1;
 		this.pedidoRepository.guardar(pedido);
