@@ -6,7 +6,7 @@ import br.com.flyapp.model.Voo;
 public class PrecoPassagemService {
 
 	public double calcular(Passageiro passageiro, Voo voo) {
-		return 0;
+		return 90.0;
 	}
 
 }
